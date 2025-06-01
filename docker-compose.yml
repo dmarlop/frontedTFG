@@ -1,0 +1,125 @@
+volumes:
+  nuevacarpeta_mariadb2_data:
+    external: true
+
+networks:
+  nuevacarpeta_backend: {}
+
+services:
+  #################################
+  #        MariaDB (DB)           #
+  #################################
+  mariadb2:
+    image: mariadb:latest
+    container_name: mariadb2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secreta
+      MYSQL_DATABASE: daw-pizza
+    ports:
+      - "3309:3306"
+    volumes:
+      - nuevacarpeta_mariadb2_data:/var/lib/mysql
+    networks:
+      - nuevacarpeta_backend
+
+  #################################
+  #     phpMyAdmin (GUI DB)       #
+  #################################
+  phpmyadmin2:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin2
+    restart: always
+    environment:
+      PMA_HOST: mariadb2
+      PMA_PORT: 3306
+    depends_on:
+      - mariadb2
+    ports:
+      - "8081:80"
+    networks:
+      - nuevacarpeta_backend
+
+  #################################
+  #  API 1: productoserver        #
+  #################################
+  productoserver:
+    build:
+      context: ./productoServer
+      dockerfile: Dockerfile
+    image: productoserver:latest
+    container_name: productoserver
+    restart: on-failure
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb2:3306/productosdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: secreta
+    depends_on:
+      - mariadb2
+    networks:
+      - nuevacarpeta_backend
+
+  #################################
+  #  API 2: catalogoserver        #
+  #################################
+  catalogoserver:
+    build:
+      context: ./catalogoServer
+      dockerfile: Dockerfile
+    image: catalogoserver:latest
+    container_name: catalogoserver
+    restart: on-failure
+    ports:
+      - "8087:8087"
+    environment:
+
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb2:3306/catalogosdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: secreta
+
+      product.server.url: http://productoserver:8088/productoServer/api
+      product.server.username: admin
+      product.server.password: tfgdavidmarin2025
+    depends_on:
+      - mariadb2
+      - productoserver
+    networks:
+      - nuevacarpeta_backend
+
+  #################################
+  #  API 3: clienteserver         #
+  #################################
+  clienteserver:
+    build:
+      context: ./clienteServer
+      dockerfile: Dockerfile
+    image: clienteserver:latest
+    container_name: clienteserver
+    restart: on-failure
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb2:3306/clientesdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: secreta
+    depends_on:
+      - mariadb2
+    networks:
+      - nuevacarpeta_backend
+
+  #################################
+  #        Frontend Angular       #
+  #################################
+  frontend:
+    build:
+      context: ./frontedMecologico/frontedMecologico
+      dockerfile: Dockerfile
+    image: frontedmecologico:latest
+    container_name: frontedmecologico
+    restart: on-failure
+    ports:
+      - "4200:4200"
+    networks:
+      - nuevacarpeta_backend
