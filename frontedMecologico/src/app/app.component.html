@@ -1,0 +1,9 @@
+<app-header></app-header>
+
+<main style="margin-bottom: 200px; padding-bottom: 50px;">  <!-- ahora margin-bottom sí empuja -->
+  <router-outlet></router-outlet>
+  <!-- Oculta el carrito flotante en la ruta /tramitarPedidos -->
+<app-carrito-flotante *ngIf="!router.url.includes('tramitarPedidos')"></app-carrito-flotante>
+
+</main>
+<app-footer class="fixed-bottom"></app-footer>

@@ -1,0 +1,83 @@
+<ng-container *ngIf="cliente; else loading">
+  <div class="container py-4">
+    <div class="row justify-content-center g-4">
+
+      <!-- Tarjeta de Usuario -->
+      <div class="col-12 col-md-8">
+        <div class="card mx-auto shadow-sm rounded-4" style="max-width: 600px;">
+          <div class="card-body text-center py-5">
+            <h3 class="card-title text-success mb-3">
+              {{ cliente.nombre }} {{ cliente.apellido }}
+            </h3>
+            <p class="mb-1">
+              <i class="bi bi-telephone-fill text-success"></i>
+              {{ cliente.telefono || '— sin teléfono —' }}
+            </p>
+            <p class="mb-4">
+              <i class="bi bi-envelope-fill text-success"></i>
+              {{ cliente.email }}
+            </p>
+            <button
+              class="btn btn-success btn-lg rounded-pill px-4"
+              (click)="goToDirecciones()"
+            >
+              <i class="bi bi-geo-alt-fill me-2"></i>
+              {{ panelDireccionesVisible ? 'Ocultar direcciones' : 'Mis direcciones' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Direcciones -->
+      <div class="col-12 col-md-8" *ngIf="panelDireccionesVisible">
+        <div class="card mx-auto shadow-sm rounded-4" style="max-width: 600px;">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Direcciones</h5>
+          </div>
+          <div class="card-body bg-light">
+            <ng-container *ngIf="direcciones.length; else sinDirecciones">
+              <ng-container *ngFor="let dir of direcciones; let last = last">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <p class="mb-1"><strong>Dirección:</strong> {{ dir.direccion }}</p>
+                    <p class="mb-1"><strong>Municipio:</strong> {{ dir.municipio }}</p>
+                    <p class="mb-1"><strong>Provincia:</strong> {{ dir.provincia }}</p>
+                    <p class="mb-0">
+                      <strong>Código Postal:</strong> {{ dir.codigoPostal }}
+                      <small *ngIf="dir.esDefault" class="fst-italic text-success ms-2">
+                        (Actual)
+                      </small>
+                    </p>
+                  </div>
+                  <div class="ms-3 align-self-center">
+                    <button
+                      *ngIf="!dir.esDefault"
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="marcarComoActual(dir)"
+                    >
+                      Marcar como actual
+                    </button>
+                  </div>
+                </div>
+                <hr *ngIf="!last" class="my-2" />
+              </ng-container>
+            </ng-container>
+
+            <ng-template #sinDirecciones>
+              <p class="text-center text-muted mb-0">
+                No tienes direcciones registradas.
+              </p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+    <div class="spinner-border text-success" role="status"></div>
+  </div>
+</ng-template>

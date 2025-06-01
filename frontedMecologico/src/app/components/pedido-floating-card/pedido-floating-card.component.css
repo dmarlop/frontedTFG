@@ -1,0 +1,5 @@
+#pedido-floating-card {
+  /* ... otros estilos ... */
+  transform: translateX(300px); /* Ocultar inicialmente */
+  transition: transform 0.3s ease-in-out; /* Transición suave */
+}

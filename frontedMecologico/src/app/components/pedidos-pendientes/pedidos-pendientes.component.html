@@ -1,0 +1,184 @@
+<h2 class="my-4 text-success text-center">Pedidos Pendientes</h2>
+
+<div *ngIf="loading" class="text-center my-5">
+  <div class="spinner-border text-success"></div>
+</div>
+
+<div *ngIf="error" class="alert alert-danger text-center">
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error" class="mx-auto" style="max-width: 800px;">
+  <div class="list-group">
+    <div class="list-group-item flex-column align-items-start mb-2"
+         *ngFor="let p of pedidosPaginados">
+
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1 text-success">
+          Pedido del {{ p.fecha | date:'dd/MM/yyyy' }}
+        </h5>
+      </div>
+
+      <div class="mb-1"><strong>Cliente:</strong> {{ p.nombreUsuario }}</div>
+
+      <p class="mb-1">
+        <strong>Base pedido:</strong> {{ p.totalPedidoBase?.base | currency:'EUR':'symbol':'1.2-2' }}<br>
+        <strong>IVA pedido:</strong> {{ p.totalPedidoBase?.iva | currency:'EUR':'symbol':'1.2-2' }}
+      </p>
+
+      <p class="mb-1">
+        <strong>Total general:</strong> {{ p.totalPedido?.total | currency:'EUR':'symbol':'1.2-2' }}
+      </p>
+
+      <small class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="badge"
+              [ngClass]="{
+                'bg-warning text-dark': p.estado === 'Abierto' || p.estado === 'Tramitar',
+                'bg-primary text-white': p.estado === 'Montando',
+                'bg-info text-dark': p.estado === 'Enviado',
+                'bg-success text-white': p.estado === 'Recepcionado' || p.estado === 'Pagado'
+              }">
+          {{ p.estado }}
+        </span>
+
+        <!-- Mock de modificación de estado solo para Montando -->
+        <div *ngIf="p.estado === 'Montando'">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="mostrarSelectorEstado[p.id] = !mostrarSelectorEstado[p.id]">
+            Modificar estado
+          </button>
+
+          <div *ngIf="mostrarSelectorEstado[p.id]" class="mt-2 d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm"
+                    [(ngModel)]="estadoEditable[p.id]"
+                    (keyup.enter)="actualizarEstado(p.id, estadoEditable[p.id])"
+                    style="width: auto;">
+              <option value="" disabled selected>Seleccionar...</option>
+              <option value="Enviado">Enviado</option>
+              <option value="Recepcionado">Recepcionado</option>
+              <option value="Pagado">Pagado</option>
+            </select>
+
+            <button class="btn btn-sm btn-success"
+                    [disabled]="!estadoEditable[p.id]"
+                    (click)="actualizarEstado(p.id, estadoEditable[p.id])">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </small>
+
+      <!-- Botones -->
+      <div class="mt-2">
+        <button class="btn btn-sm btn-outline-success me-2" (click)="toggleDireccion(p.id)">
+          {{ isAddressVisible[p.id] ? 'Ocultar dirección de envío' : 'Ver dirección de envío' }}
+        </button>
+
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleProductos(p.id)">
+          {{ isProductosVisible[p.id] ? 'Ocultar productos ▲' : 'Ver productos ▼' }}
+        </button>
+
+        <button *ngIf="p.estado === 'Abierto' || p.estado === 'Montando' || p.estado === 'Tramitar'"
+                class="btn btn-sm btn-outline-danger me-2"
+                (click)="cancelarPedido(p.id)">
+          Cancelar
+        </button>
+
+        <a *ngIf="p.estado === 'Abierto' || p.estado === 'Montando'"
+           class="btn btn-sm btn-outline-warning me-2"
+           (click)="editarPedido(p.id)">
+          Editar
+        </a>
+
+        <a *ngIf="p.estado === 'Tramitar'"
+           class="btn btn-sm btn-outline-primary"
+           (click)="tramitarVisualmente(p.id)">
+          Ver / Tramitar
+        </a>
+      </div>
+
+      <!-- Dirección -->
+      <div *ngIf="isAddressVisible[p.id]" class="mt-2 p-2 border rounded bg-light">
+        <div><strong>Dirección:</strong> {{ p.direccionPedido }}</div>
+      </div>
+
+      <!-- Productos -->
+      <div *ngIf="isProductosVisible[p.id]" class="mt-3">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad pedida / Unidad</th>
+              <th *ngIf="p.estado !== 'Abierto' && p.estado !== 'Tramitar'">Cantidad entregada</th>
+              <th>PVP</th>
+              <th>Total</th>
+              <th class="text-center" *ngIf="p.estado === 'Abierto' || p.estado === 'Tramitar'">Editar cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prod of p.productos">
+              <td>{{ prod.nombreProducto }}</td>
+              <td>
+                <ng-container *ngIf="modoEdicion[p.id + '_' + prod.codProductoCatalogo]; else mostrarCantidad">
+                  <input type="number"
+                         [(ngModel)]="cantidadesEditables[p.id + '_' + prod.codProductoCatalogo]"
+                         class="form-control form-control-sm"
+                         style="max-width: 80px; display: inline-block;">
+                </ng-container>
+                <ng-template #mostrarCantidad>
+                  {{ prod.cantidadPedida }}
+                </ng-template>
+                <span *ngIf="unidadVentaPorProducto[catalogoId + '_' + prod.codProductoCatalogo]">
+                  / {{ unidadVentaPorProducto[catalogoId + '_' + prod.codProductoCatalogo] }}
+                </span>
+              </td>
+              <td *ngIf="p.estado !== 'Abierto' && p.estado !== 'Tramitar'">
+                {{ prod.cantidadEntregada ?? '—' }}
+              </td>
+              <td>{{ prod.precioUnitario | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td class="text-success fw-bold">
+                {{ (prod.subtotal * 1.21) | currency:'EUR':'symbol':'1.2-2' }}
+              </td>
+              <td class="text-center" *ngIf="p.estado === 'Abierto' || p.estado === 'Tramitar'">
+                <button class="btn btn-success btn-sm"
+                        (click)="editarCantidad(p.id, prod.codProductoCatalogo, prod.cantidadPedida)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="text-end" *ngIf="p.estado === 'Abierto' || p.estado === 'Tramitar'">
+          <button class="btn btn-primary btn-sm" (click)="tramitar(p.id, p.productos)">
+            Tramitar pedido
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="pedidos.length === 0" class="text-center text-muted py-3">
+      No hay pedidos pendientes.
+    </div>
+  </div>
+
+  <nav *ngIf="totalPaginas > 1" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="paginaActual === 1">
+        <button class="page-link text-success" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+      </li>
+
+      <li class="page-item" *ngFor="let page of [].constructor(totalPaginas); let i = index">
+        <button class="page-link text-success"
+                [ngStyle]="{'font-weight': paginaActual === i + 1 ? 'bold' : 'normal'}"
+                (click)="cambiarPagina(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+
+      <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+        <button class="page-link text-success" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+</div>

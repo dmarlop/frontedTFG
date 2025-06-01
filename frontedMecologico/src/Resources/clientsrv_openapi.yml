@@ -1,0 +1,494 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Usuarios Mecologico API
+  description: |
+    # API que gestiona los usuarios, e información asociada a los mismo, en Mecologico
+  contact:
+    name: API Support
+    url: https://domain/issues
+    email: mail@mail.com
+tags:
+  - name:  Usuarios
+    description: API de Usuarios
+paths:
+  /api/v1/usuarios/:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene los usaurios de Mecologico
+      description: Obtiene los usaurios de Mecologico
+      operationId: userMecologicoGetAll
+      responses:
+        '200':
+          description: Process configuration information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+    post:
+      tags:
+        - Usuarios
+      summary: Crea un usuario de Mecologico. El identificador (Sub) y el correo electrónico se tomarán automátciamente del token JWT
+      description: Create Mecologico User
+      operationId: userMecologicoCreate
+      requestBody:
+        description: Información del Usuario a crear. El identificador (Sub) y el correo electrónico se tomarán automátciamente del token JWT
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioEdit'        
+      responses:
+        '200':
+          description: Información del Usuario Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout              
+  /api/v1/usuarios/{usuariosub}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene un usuario por su identificador
+      description: Obtiene un usuario por su identificador
+      operationId: userMecologicoBySub
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'           
+      responses:
+        '200':
+          description: Process configuration information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Exists. El sistema debería de crear el usuario porque la autentificación es válida
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    put:
+      tags:
+        - Usuarios
+      summary: Actualiza un usuario de Mecologico. El identificador (Sub) y el correo electrónico se tomarán automátciamente del token JWT
+      description: Update Mecologico User
+      operationId: userMecologicoUpdate
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'          
+      requestBody:
+        description: Información de Usuario a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioEdit'        
+      responses:
+        '200':
+          description: Información del Usuario Actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    delete:
+      tags:
+        - Usuarios
+      summary: Elimina un usuario de Mecologico. No debería de usarse, porque debería dar de baja al usuario.
+      description: Delete Mecologico User
+      operationId: userMecologicoDelete
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'    
+      responses:
+        '204':
+          description: El usuario ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                             
+  /api/v1/usuarios/{usuariosub}/direcciones:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene las direcciones de un usuario
+      description: Obtiene las direcciones de un usuario por su identificador
+      operationId: addressUserGetAll
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'           
+      responses:
+        '200':
+          description: Obtieene las direcciones del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Direccion'       
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    post:
+      tags:
+        - Usuarios
+      summary: Crea una Dirección de Usuario de Mecologico.
+      description: Create Mecologico Address User
+      operationId: addressUserCreate
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'           
+      requestBody:
+        description: Información de la Dirección de Usuario a crear.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DireccionEdit'        
+      responses:
+        '200':
+          description: Información de la Dirección de Usuario Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Direccion"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                     
+  /api/v1/usuarios/{usuariosub}/direcciones/{idaddress}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene la direción un usuario por su identificador
+      description: Obtiene la direción un usuario por su identificador
+      operationId: addressUserGetById
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'           
+        - $ref: '#/components/parameters/idaddress'           
+      responses:
+        '200':
+          description: Información de la dirección del usuario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Direccion"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    put:
+      tags:
+        - Usuarios
+      summary: Actualiza la dirección de usuario de Mecologico. En la colección sólo será posbile tener una dirección por defecto.
+      description: Update Mecologico User
+      operationId: addressUserUpdate
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'    
+        - $ref: '#/components/parameters/idaddress'            
+      requestBody:
+        description: Información de la dirección  Usuario a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DireccionEdit'        
+      responses:
+        '200':
+          description: Información de la dirección del Usuario Actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Direccion"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    delete:
+      tags:
+        - Usuarios
+      summary: Elimina una dirección de usuario de Mecologico.
+      description: Delete Mecologico Address User
+      operationId: addressUserDelete
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'    
+        - $ref: '#/components/parameters/idaddress'       
+      responses:
+        '204':
+          description: La dirección de usuario ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout  
+  
+  /api/v1/usuarios/{usuariosub}/direcciones/default:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene las direccion por defecto de un usuario
+      description: Obtiene la direccion por defecto de un usuario por su identificador
+      operationId: addressUserByDefault
+      parameters:
+        - $ref: '#/components/parameters/usuariosub'           
+      responses:
+        '200':
+          description: Obtieene las direcciones del usuario
+          content:          
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Direccion"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout               
+components:
+  parameters:
+    usuariosub:
+      name: usuariosub
+      in: path
+      required: true
+      description: identificador del usuario
+      schema:
+        type: string
+      example: vacaciones
+    idaddress:
+      name: idaddress
+      in: path
+      required: true
+      description: identificador del usuario
+      schema:
+        type: string
+      example: vacaciones      
+  schemas:
+    Usuario:
+      type: object
+      description: Instancia de Usuario
+      allOf:
+        - $ref: "#/components/schemas/UsuarioEdit"     
+        - properties:
+            sub:
+              type: string
+              description: Identificador del usuario
+            email:
+              type: string
+              description: correo electrónico
+            startTime:
+              type: string
+              description: Fecha de creación del usuario
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del usuario
+              format: date-time
+    UsuarioEdit:
+      type: object
+      description: Usuario de Mecológico
+      properties:
+        nombre:
+          type: string
+          description: nombre del usuario
+        apellido:
+          type: string
+          description: apellidos del usuario          
+        telefono:
+          type: string
+          description: telefono del usuario
+        comentario:
+          type: string
+          description: comentario sobre el usuario
+        state:
+          type: string
+          enum:
+            - Activo
+            - Baja            
+          description: Estado en el que se encuentra el usuario
+    Direccion:
+      type: object
+      description: Instancia de Dirección de Usuario
+      allOf:
+        - $ref: "#/components/schemas/DireccionEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador de la dirección usuario
+            startTime:
+              type: string
+              description: Fecha de creación del usuario
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del usuario
+              format: date-time          
+    DireccionEdit:
+      type: object
+      description: Instancia de Dirección de Usuario
+      properties:
+        direccion:
+          type: string
+          description: nombre de la dirección
+        codigoPostal:
+          type: string
+          description: código postal
+        Municipio:
+          type: string
+          description: Municipio del usuario
+        Provincia:
+          type: string
+          description: Provincia sobre el usuario
+        default:
+          type: boolean
+          description: Indica si la direcciónes por defecto
+          default: false
+    ErrorResponse:
+      description: Provides error information
+      type: object
+      properties:
+        code:
+          type: integer
+          description: |
+            The code allows your client application to identify the error in an automated fashion.
+        message:
+          type: string
+          description: A detailed message of the error.
+        description:
+          type: string
+          description: A description message of the error.

@@ -1,0 +1,13 @@
+footer {
+    a.text-success {
+      transition: color 0.2s;
+  
+      &:hover {
+        
+        color: #155724;
+        text-decoration: underline;
+      }
+      
+    }
+    
+  }

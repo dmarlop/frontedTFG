@@ -1,0 +1,89 @@
+<div class="carrito-flotante show bg-light shadow rounded" [class.show]="visible" *ngIf="visible" style="min-width: 430px;">
+  <div class="carrito-header d-flex justify-content-between align-items-center px-3 py-2 bg-light shadow-sm rounded-top">
+    <h5 class="mb-0">Tu Pedido</h5>
+    <button class="btn btn-close-white" (click)="cerrarYLimpiar()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="carrito-body p-3">
+    <!-- 🛒 Productos del carrito -->
+    <div class="producto-item border-bottom py-3" *ngFor="let p of carrito">
+      <div class="row gx-0 align-items-center">
+        <div class="col-4">
+          <div class="text-muted small">Producto</div>
+          <div class="fw-semibold text-dark">{{ p.nombre }}</div>
+        </div>
+
+        <div class="col-3 text-center">
+          <div class="text-muted small">Cantidad</div>
+          <div *ngIf="!p.editando" class="fw-semibold">{{ p.cantidadPedida }}</div>
+          <input *ngIf="p.editando" type="number" [(ngModel)]="p.nuevaCantidad"
+                 class="form-control form-control-sm text-center cantidad-input mt-1"
+                 min="0.1" step="0.1" (keyup.enter)="confirmarCantidad(p)" />
+        </div>
+
+        <div class="col-2 text-center">
+          <div class="text-muted small">Unidad</div>
+          <div class="fw-semibold">{{ p.unidadDeVenta }}</div>
+        </div>
+
+        <div class="col-3 text-end">
+          <div class="text-muted small">Precio</div>
+          <div class="fw-semibold">{{ p.precio | currency:'EUR':'symbol':'1.2-2' }}</div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-2">
+        <button class="btn btn-success btn-sm me-2" (click)="editarCantidad(p)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="eliminar(p.codProductoCatalogo)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Pie con botones de acción -->
+  <div class="carrito-footer bg-light shadow-sm p-3 rounded-bottom d-flex justify-content-between">
+    <span class="fw-bold">Total: {{ calcularTotal() | currency:'EUR':'symbol':'1.2-2' }}</span>
+
+    <!-- ✅ CREAR -->
+    <button class="btn btn-success"
+            *ngIf="!esEdicionActiva() && !esTramitacionVisualActiva()"
+            (click)="tramitarPedidoDesdeCreacion()">
+      Crear pedido
+    </button>
+
+    <!-- ✏️ EDITAR -->
+    <button class="btn btn-warning"
+            *ngIf="esEdicionActiva()"
+            (click)="guardarPedidoEditado()">
+      Guardar pedido
+    </button>
+
+    <!-- 🚚 TRAMITAR VISUAL -->
+    <button class="btn btn-primary"
+            *ngIf="esTramitacionVisualActiva()"
+            (click)="tramitarVisualmenteElPedido()">
+      Tramitar pedido
+    </button>
+  </div>
+
+  <!-- 🧾 Mensaje de error si no estás logueado -->
+  <div class="mensaje-error-login shadow-lg rounded py-3 px-4" *ngIf="mostrarErrorLogin">
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="text-success fw-semibold">
+        ⚠️ Vaya! Detectamos que no has iniciado sesión.
+        <br>Hazlo para poder completar tu pedido! 🛒
+      </span>
+      <button class="btn btn-outline-danger btn-sm" (click)="cerrarMensajeError()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <button class="btn btn-success w-100 mt-2" (click)="auth.loginIfNeeded()">
+      <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+    </button>
+  </div>
+</div>

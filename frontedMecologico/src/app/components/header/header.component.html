@@ -1,0 +1,71 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+
+    <!-- Logo -->
+    <a class="navbar-brand fw-semibold text-success" routerLink="/">Mecológico</a>
+
+    <!-- Menús centrados -->
+    <div class="mx-auto d-flex gap-4">
+      
+      <!-- Catálogo -->
+      <div *ngIf="auth.isLogged()" class="dropdown">
+  <button class="btn btn-outline-success dropdown-toggle rounded-pill px-4"
+          data-bs-toggle="dropdown">
+    Catálogo
+  </button>
+  <ul class="dropdown-menu shadow rounded-4 text-center">
+    <li>
+      <a class="dropdown-item" routerLink="/catalogos" (click)="closeDropdown($event)">
+        Catálogos
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" routerLink="/catalogos-carne" (click)="closeDropdown($event)">
+        Catálogo Carne
+      </a>
+    </li>
+  </ul>
+</div>
+
+      <!-- Pedidos (Oculto si NO está logueado) -->
+      <div *ngIf="auth.isLogged()" class="dropdown">
+        <button class="btn btn-outline-success dropdown-toggle rounded-pill px-4"
+                data-bs-toggle="dropdown">
+          Pedido
+        </button>
+        <ul class="dropdown-menu shadow rounded-4 text-center">
+          <li><a routerLink="/pedidosPendientes" class="dropdown-item">Pendientes</a></li>
+          <li><a routerLink="/pedidosFinalizados" class="dropdown-item">Finalizados</a></li>
+          <li><a routerLink="/pedidosEntregados" class="dropdown-item">Entregados</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Icono usuario -->
+    <button class="btn ms-auto" (click)="goCliente()" aria-label="Cliente">
+      <i class="bi bi-person-circle fs-3 text-success"></i>
+    </button>
+
+    <!-- Botón Iniciar sesión (Solo aparece si NO está logueado) -->
+    <button
+      *ngIf="!auth.isLogged()"
+      class="btn btn-outline-success rounded-pill px-3"
+      (click)="login()"
+    >
+      <i class="bi bi-box-arrow-in-right me-1"></i>
+      Iniciar sesión
+    </button>
+
+    <!-- Botón Cerrar sesión (Solo aparece si está logueado) -->
+    <button
+      *ngIf="auth.isLogged()"
+      class="btn btn-outline-danger rounded-pill px-3"
+      (click)="logout()"
+    >
+      <i class="bi bi-box-arrow-right me-1"></i>
+      Cerrar sesión
+    </button>
+
+  </div>
+</nav>

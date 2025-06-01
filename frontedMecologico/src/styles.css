@@ -1,0 +1,12 @@
+
+
+.page-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 0.5rem;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }

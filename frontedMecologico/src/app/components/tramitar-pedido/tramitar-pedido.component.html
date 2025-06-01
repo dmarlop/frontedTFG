@@ -1,0 +1,166 @@
+<div *ngIf="mensajeExito" class="alert alert-success text-center" role="alert">
+  {{ mensajeExito }}
+</div>
+
+<div class="container my-5">
+  <h2>
+    {{
+      esTramitacionVisual
+        ? 'Tramitar pedido'
+        : estadoPedido
+        ? 'Editar pedido'
+        : 'Crear pedido'
+    }}
+  </h2>
+
+  <div class="card shadow-sm p-4">
+    <h5 class="mb-3">Productos:</h5>
+
+    <div class="row fw-semibold text-muted pb-2 border-bottom">
+      <div class="col-md-3">Producto</div>
+      <div class="col-md-2 text-center">Cantidad / Unidad</div>
+      <div class="col-md-2 text-end">Precio</div>
+      <div class="col-md-2 text-end">Total</div>
+      <div class="col-md-3 text-end">Acciones</div>
+    </div>
+
+    <div *ngFor="let p of carrito" class="border-bottom py-3">
+      <div class="row gx-0 align-items-center">
+        <div class="col-md-3">
+          <div class="fw-semibold">{{ p.nombre }}</div>
+        </div>
+
+        <div class="col-md-2 text-center">
+          <div class="d-flex justify-content-center align-items-center">
+            <span *ngIf="!p.editando" class="fw-bold me-1">
+              {{ p.cantidadPedida }}
+            </span>
+            <span class="fw-bold mx-2">/</span>
+            <span class="fw-bold ms-2">
+              {{ p.unidadDeVenta }}
+            </span>
+          </div>
+          <input *ngIf="p.editando"
+                type="number"
+                [(ngModel)]="p.nuevaCantidad"
+                class="form-control form-control-sm text-center mx-2"
+                min="0.1"
+                step="0.1"
+                (keyup.enter)="confirmarCantidad(p)" />
+        </div>
+
+        <div class="col-md-2 text-end">
+          {{ p.precio | number:'1.2-2' }} €
+        </div>
+
+        <div class="col-md-2 text-end text-success fw-semibold">
+          {{ (p.precio * p.cantidadPedida) | number:'1.2-2' }} €
+        </div>
+
+        <div class="col-md-3 text-end">
+          <button class="btn btn-success btn-sm me-1" (click)="editarCantidad(p)">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="eliminar(p.codProductoCatalogo)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟢 Selector de método de entrega -->
+    <div class="mt-4">
+      <label class="form-label fw-semibold">Método de entrega</label>
+      <select class="form-select" [(ngModel)]="modoEntrega">
+        <option value="recoger">Recoger en tienda</option>
+        <option value="domicilio">Envío a domicilio</option>
+      </select>
+    </div>
+
+    <div class="mt-3" *ngIf="modoEntrega === 'domicilio'">
+      <label class="form-label fw-semibold">Selecciona una dirección</label>
+
+      <select class="form-select" [(ngModel)]="direccionSeleccionada" *ngIf="direcciones.length > 0">
+        <option *ngFor="let d of direcciones" [value]="d.id">
+          {{ d.direccion }}, {{ d.municipio || 'Sin municipio' }} ({{ d.codigoPostal || 'CP no disponible' }})
+        </option>
+      </select>
+
+      <div class="alert alert-warning mt-2" *ngIf="direcciones.length === 0">
+        No tienes direcciones guardadas. Añade una en tu perfil antes de continuar con el pedido.
+      </div>
+
+      <div class="mt-2">
+        <span class="text-muted">¿Desea añadir una nueva dirección?</span>
+        <button class="btn btn-sm btn-outline-success ms-2" (click)="nuevaDireccionVisible = !nuevaDireccionVisible">
+          {{ nuevaDireccionVisible ? 'Cancelar' : 'Añadir' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <span class="fw-bold fs-5">Total:</span>
+      <span class="fw-bold fs-5">{{ calcularTotal() | number:'1.2-2' }} €</span>
+    </div>
+
+    <!-- 🔘 Botonera -->
+    <div class="mt-4 text-end">
+      <button
+        class="btn btn-success"
+        *ngIf="esCreacion"
+        (click)="confirmarTramitacion()">
+        Crear pedido
+      </button>
+
+      <ng-container *ngIf="esEdicion">
+        <button class="btn btn-warning" (click)="confirmarTramitacion()">Guardar pedido</button>
+        <button class="btn btn-danger ms-2" (click)="cancelarTramitacion()">Cancelar pedido</button>
+        <button class="btn btn-primary ms-2" (click)="tramitarPedidoAhora()">Tramitar pedido</button>
+      </ng-container>
+
+      <ng-container *ngIf="esTramitacionVisual">
+        <button class="btn btn-danger me-2" (click)="cancelarTramitacion()">Cancelar pedido</button>
+        <button class="btn btn-primary" (click)="confirmarTramitacion()">Finalizar pedido</button>
+      </ng-container>
+    </div>
+
+    <!-- Formulario para nueva dirección -->
+    <div class="card mt-4 p-3 bg-light border" *ngIf="nuevaDireccionVisible">
+      <h6 class="mb-3">Nueva dirección temporal</h6>
+
+      <div class="mb-3">
+        <label class="form-label">Dirección *</label>
+        <input type="text" class="form-control" [(ngModel)]="nuevaDireccion.direccion" required />
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Código Postal</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevaDireccion.codigoPostal" />
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Municipio</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevaDireccion.municipio" />
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Provincia</label>
+          <input type="text" class="form-control" [(ngModel)]="nuevaDireccion.provincia" />
+        </div>
+      </div>
+
+      <div class="mt-2 fst-italic small text-muted" *ngIf="nuevaDireccionVisible">
+        ¿Desea añadir esta nueva dirección a las ya existentes?
+        <button class="btn btn-sm btn-outline-primary ms-2" (click)="guardarDireccion()">Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-5">
+    <button class="btn btn-success px-4" (click)="volverAlCatalogo()">
+      <i class="bi bi-arrow-left-circle me-1"></i>
+      Seguir comprando
+    </button>
+  </div>
+</div>

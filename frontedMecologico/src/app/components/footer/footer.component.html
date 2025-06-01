@@ -1,0 +1,27 @@
+<footer class="bg-light py-3 fixed-bottom">
+    <div class="container py-0">
+      <div class="row g-2">
+        <div class="col-md-4 mb-2" *ngFor="let section of sections">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <h5 class="card-title text-success mb-2">{{ section.title }}</h5>
+              <ul class="list-group list-group-flush">
+                <li
+                  class="list-group-item px-0 border-0 py-1"
+                  *ngFor="let link of section.links"
+                >
+                  <a
+                    [routerLink]="link.route"
+                    class="text-decoration-none text-success fw-medium"
+                  >
+                    {{ link.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  

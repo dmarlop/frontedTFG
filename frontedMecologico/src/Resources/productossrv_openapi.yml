@@ -1,0 +1,879 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Productos Mecologico API
+  description: |
+    # API que gestiona los Prodcutos, e información asociada a los mismo, en Mecologico
+  contact:
+    name: API Support
+    url: https://domain/issues
+    email: mail@mail.com
+tags:
+  - name:  Productos
+    description: API de Productos
+  - name:  Categorias
+    description: API de Categorias de Productos
+
+paths:
+  /api/v1/productos:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene los productos de Mecologico
+      description: Obtiene los productos de Mecologico
+      operationId: productosMecologicoGetAll
+      responses:
+        '200':
+          description: Productos Mecologico information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+    post:
+      tags:
+        - Productos
+      summary: Crea unnuevo Producto en Mecologico.
+      description: Create Mecologico Producto
+      operationId: ProductoMecologicoCreate
+      requestBody:
+        description: Información del Producto a crear. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoEdit'        
+      responses:
+        '200':
+          description: Información del Producto Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout              
+  /api/v1/productos/{productoId}:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene un Producto por su identificador
+      description: Obtiene un Producto por su identificador
+      operationId: productoMecologicoById
+      parameters:
+        - $ref: '#/components/parameters/productoId'           
+      responses:
+        '200':
+          description: Producto By ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    put:
+      tags:
+        - Productos
+      summary: Actualiza un producto de Mecologico.
+      description: Update Mecologico Producto
+      operationId: productoMecologicoUpdate
+      parameters:
+        - $ref: '#/components/parameters/productoId'          
+      requestBody:
+        description: Información de Producto a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoEdit'        
+      responses:
+        '200':
+          description: Información del Producto Actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    delete:
+      tags:
+        - Productos
+      summary: Elimina un Producto de Mecologico.
+      description: Delete Mecologico Producto
+      operationId: productoMecologicoDelete
+      parameters:
+        - $ref: '#/components/parameters/productoId'    
+      responses:
+        '204':
+          description: El Producto ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                             
+  /api/v1/productos/{productoId}/ingredientes:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene los ingredientes de un producto
+      description: Obtiene los ingredientes de un producto
+      operationId: ingredientesProductoGetAll
+      parameters:
+        - $ref: '#/components/parameters/productoId'           
+      responses:
+        '200':
+          description: Obtieene los ingredientes del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientesProducto'       
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    put:
+      tags:
+        - Productos
+      summary: Crea o actualiza los ingredientes de un producto de  Mecologico.
+      description: Create or Update Mecologico Producto Ingredientes
+      operationId: ingredientesProductoCreateUpdate
+      parameters:
+        - $ref: '#/components/parameters/productoId'           
+      requestBody:
+        description: Información de los Ingredientes de un Producto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientesProducto'        
+      responses:
+        '200':
+          description: Información de los ingredientes del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngredientesProducto"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                               
+  
+  /api/v1/productos/{productoId}/imagenes:
+    post:
+      tags:
+        - Productos
+      description: Create la imagen de un producto
+      operationId: updateECardLayout
+      parameters:
+        - $ref: '#/components/parameters/productoId'
+      requestBody:
+        content:
+          # a binary file of type png or jpeg
+          'image/jpeg': # Media type
+            schema:
+              type: string
+              format: binary
+          'image/png': # Media type
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: devuelve el indentificador de la imagen con el que formar la url de acceso a la imagen
+          content:
+          # a binary file of type png or jpeg
+            application/json:
+              schema:
+                type: "string"
+                description: :"url de acceso a la imagen creada"
+
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+  /api/v1/productos/{productoId}/imagenes/{productoImagenId}:
+    get:
+      tags:
+        - Productos
+      description: obteneer la imagen de un producto
+      operationId: imagenProductoGetById
+      parameters:
+        - $ref: '#/components/parameters/productoId'
+        - $ref: '#/components/parameters/productoImagenId'
+      responses:
+        '200':
+          description: devuelve el indentificador de la imagen con el que formar la url de acceso a la imagen
+          content:
+            # a binary file of type png or jpeg
+            'image/jpeg': # Media type
+              schema:
+                type: string
+                format: binary
+            'image/png': # Media type
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                                               
+    delete:
+      tags:
+        - Productos
+      summary: Elimina una imagen de un producto
+      description: Delete Mecologico Imagen Product
+      operationId: imagenProductoDelete
+      parameters:
+        - $ref: '#/components/parameters/productoId'    
+        - $ref: '#/components/parameters/productoImagenId'
+      responses:
+        '204':
+          description: La dirección de usuario ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout         
+
+  /api/v1/productos/categoria:
+    get:
+      tags:
+        - Categorias
+      summary: Obtiene las categorías de productos de Mecologico
+      description: Obtiene  las categorías de productos de Mecologico
+      operationId: categoriasMecologicoGetAll
+      responses:
+        '200':
+          description: Categorias de Productos Mecologico information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriaDetalle"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+    post:
+      tags:
+        - Categorias
+      summary: Crea una nueva Categoria de Producto en Mecologico.
+      description: Create Mecologico Categoria Producto
+      operationId: categoriaMecologicoCreate
+      requestBody:
+        description: Información de la Categoria Producto a crear. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaEdit'        
+      responses:
+        '200':
+          description: Información de la Categoria Producto Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categoria"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+  /api/v1/productos/categoria/{categoriaId}:
+    get:
+      tags:
+        - Categorias
+      summary: Obtiene el detalle de las categorías de productos de Mecologico
+      description: Obtiene el detalle de la categorías de productos de Mecologico
+      operationId: categoriasMecologicoGetById
+      parameters:
+        - $ref: '#/components/parameters/categoriaId'      
+      responses:
+        '200':
+          description: Categorias de Productos Mecologico information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriaDetalle"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    put:
+      tags:
+        - Categorias
+      description: Actualiza la Categoria un producto
+      operationId: categoriaMecologicoUpdate
+      parameters:
+        - $ref: '#/components/parameters/categoriaId'
+      requestBody:
+        description: Información de la Categoria Producto a actualizar. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaEdit'        
+      responses:
+        '200':
+          description: devuelve el indentificador de la imagen con el que formar la url de acceso a la imagen
+          content:
+          # a binary file of type png or jpeg
+            application/json:
+              schema:
+                type: "string"
+                description: :"url de acceso a la imagen creada"
+
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    delete:
+      tags:
+        - Categorias
+      summary: Elimina una Categoria de  Producto de Mecologico.
+      description: Delete Mecologico Catalogo Producto
+      operationId: catalogoMecologicoDelete
+      parameters:
+        - $ref: '#/components/parameters/categoriaId'    
+      responses:
+        '204':
+          description: El Catalogo Producto ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+
+  /api/v1/productos/categoria/{categoriaId}/subcategoria:               
+    get:
+      tags:
+        - Categorias
+      summary: Obtiene las subcategorías de productos de Mecologico
+      description: Obtiene  las subcategorías de productos de Mecologico
+      operationId: subCategoriasMecologicoGetByCategoria
+      parameters:
+        - $ref: '#/components/parameters/categoriaId' 
+      responses:
+        '200':
+          description: SubCategorias de Productos Mecologico information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubCategoria"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+    post:
+      tags:
+        - Categorias
+      summary: Crea una nueva SubCategoria de Producto en Mecologico.
+      description: Create Mecologico SubCategoria Producto
+      operationId: subCategoriaMecologicoCreate
+      parameters:
+        - $ref: '#/components/parameters/categoriaId' 
+      requestBody:
+        description: Información de la SubCategoria Producto a crear. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCategoriaEdit'        
+      responses:
+        '200':
+          description: Información de la SubCategoria Producto Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubCategoria"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout  
+  /api/v1/productos/categoria/{categoriaId}/subcategoria/{subCategoriaId}:
+    get:
+      tags:
+        - Categorias
+      description: obtener las subcategorias  de una categoría de  producto
+      operationId: subCategoriasMecologicoGetId
+      parameters:
+        - $ref: '#/components/parameters/categoriaId'
+        - $ref: '#/components/parameters/subCategoriaId'
+      responses:
+        '200':
+          description: devuelve la subcategoría
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubCategoria"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                                               
+    put:
+      tags:
+        - Categorias
+      summary: Actualiza SubCategoria de Producto en Mecologico.
+      description: Actualiza Mecologico SubCategoria Producto
+      operationId: subCategoriaMecologicoUpdate
+      parameters:
+        - $ref: '#/components/parameters/categoriaId' 
+        - $ref: '#/components/parameters/subCategoriaId'
+      requestBody:
+        description: Información de la SubCategoria Producto a actualizar. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCategoriaEdit'        
+      responses:
+        '200':
+          description: Información de la SubCategoria Producto Actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubCategoria"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout            
+    delete:
+      tags:
+        - Categorias
+      summary: Elimina una subcategoría de una categoría de producto
+      description: Delete Mecologico Imagen Product
+      operationId: subCategoriaMecologicoDelete
+      parameters:
+        - $ref: '#/components/parameters/categoriaId'
+        - $ref: '#/components/parameters/subCategoriaId'
+      responses:
+        '204':
+          description: La subcategoría ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout         
+
+
+components:
+  parameters:
+    productoId:
+      name: productoId
+      in: path
+      required: true
+      description: identificador del Producto 
+      schema:
+        type: string
+      example: vacaciones
+    productoImagenId:
+      name: productoImagenId
+      in: path
+      required: true
+      description: identificador del Producto 
+      schema:
+        type: string
+      example: vacaciones      
+    categoriaId:
+      name: categoriaId
+      in: path
+      required: true
+      description: identificador de la categoria de producto
+      schema:
+        type: string
+      example: vacaciones
+    subCategoriaId:
+      name: subCategoriaId
+      in: path
+      required: true
+      description: identificador de la subcategoria de producto
+      schema:
+        type: string
+      example: vacaciones            
+  schemas:
+    Producto:
+      type: object
+      description: Instancia de Producto
+      allOf:
+        - $ref: "#/components/schemas/ProductoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Producto
+            ingredientes:
+              description: indica si existe una lista de ingredientes disponible
+              type: boolean
+            fotografias:
+              description: indica si existe una lista de fotografias disponible
+              type: boolean
+            startTime:
+              type: string
+              description: Fecha de creación del Producto
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del Producto
+              format: date-time
+            imagenes:
+              type: array
+              description: listado de identificadores de imágenes
+              items:
+                type: string
+    ProductoEdit:
+      type: object
+      description: Producto de Mecológico
+      properties:
+        nombre:
+          type: string
+          description: nombre del Producto
+        codProducto:
+          type: string
+          description: código del Producto          
+        variedad:
+          type: string
+          description: variedad del Producto
+        nombreComercial:
+          type: string
+          description: nombre con el que se vende el producto
+        codigoBarras:
+          type: string
+          description: codigo de barras del producto
+        Categoria:
+          type: string
+          description: categoría a la que pertenece el producto
+          $ref: '#/components/schemas/Categoria'  
+        Subcategoria:
+          type: string
+          description: subcategoría a la que pertenece el producto
+          $ref: '#/components/schemas/SubCategoria'  
+        caracteristicas:
+          description: características del producto
+          $ref: '#/components/schemas/CaracteristicasProducto'  
+      required:
+        - nombre
+        - nombreComercial
+    CaracteristicasProducto:
+      type: array
+      description: Producto de Mecológico
+      items:
+        type: string
+        enum:
+          - "Ecológico"
+          - "ComercioJusto"
+          - "Vegano"
+          - "Vegetariano"
+          - "SinGluten"
+          - "SinGlutenTrazas"
+          - "SinLactosa"
+    IngredientesProducto:
+      type: array
+      description: Producto de Mecológico
+      items:
+        type: string
+    
+    Categoria:
+      type: object
+      description: Instancia de Categoria Producto
+      allOf:
+        - $ref: "#/components/schemas/CategoriaEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador de la Categoria Producto
+    CategoriaDetalle:
+      type: object
+      description: Instancia de Categoria Producto
+      allOf:
+        - $ref: "#/components/schemas/Categoria"     
+        - properties:
+            subcategorias:
+              type: array
+              description: listado de subcategorías asociadas
+              items:
+                $ref: "#/components/schemas/SubCategoriaEdit"                
+    CategoriaEdit:
+      type: object
+      description: Categoria de Producto de Mecológico
+      properties:
+        codCategoria:
+          type: string
+          description: Código de Categoría del Producto
+        nombre:
+          type: string
+          description: nombre de la Categoria Producto
+        orden:
+          type: integer
+          description: permite la ordenación de categorías dentro del global
+    SubCategoria:
+      type: object
+      description: Instancia de Categoria Producto
+      allOf:
+        - $ref: "#/components/schemas/SubCategoriaEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador de la Subcategoria Producto
+    SubCategoriaEdit:
+      type: object
+      description: SubCategoria de Producto de Mecológico
+      properties:
+        codCategoria:
+          type: string
+          description: Código de SubCategoría del Producto
+        nombre:
+          type: string
+          description: nombre de la SubCategoria Producto
+        orden:
+          type: integer
+          description: permite la ordenación de subcategorías dentro del global
+
+
+    ErrorResponse:
+      description: Provides error information
+      type: object
+      properties:
+        code:
+          type: integer
+          description: |
+            The code allows your client application to identify the error in an automated fashion.
+        message:
+          type: string
+          description: A detailed message of the error.
+        description:
+          type: string
+          description: A description message of the error.

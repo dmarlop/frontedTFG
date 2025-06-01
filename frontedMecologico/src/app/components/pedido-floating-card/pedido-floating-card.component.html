@@ -1,0 +1,51 @@
+<!-- contenedor siempre presente para poder animar transform -->
+<div
+  id="pedido-floating-card"
+  class="card"
+  [class.open]="pedido"
+  style="
+    position: fixed;
+    bottom: 20px;
+    right: 0;
+    width: 300px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  "
+>
+  <!-- Si hay pedido, mostramos contenido -->
+  <div class="card-body" *ngIf="pedido; else empty">
+    <!-- botón de cerrar -->
+    <button
+      type="button"
+      class="btn-close float-end"
+      (click)="pedido = null"
+    ></button>
+
+    <h5 class="card-title">Tu Pedido</h5>
+
+    <ul class="list-group mb-2">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+        *ngFor="let producto of pedido.productos"
+      >
+        <span>{{ producto.codProductoCatalogo }}</span>
+        <span>{{ producto.cantidadPedida }}</span>
+      </li>
+    </ul>
+
+    <p class="card-text">
+      <strong>Total:</strong> {{ getTotal(pedido) | currency }}
+    </p>
+
+    <button class="btn btn-primary w-100" (click)="checkout()">
+      Finalizar Pedido
+    </button>
+  </div>
+
+  <!-- plantilla para pedido vacío -->
+  <ng-template #empty>
+    <div class="card-body text-center">
+      <p>No hay nada en el pedido</p>
+    </div>
+  </ng-template>
+</div>

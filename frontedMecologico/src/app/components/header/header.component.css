@@ -1,0 +1,12 @@
+:host {
+    position: sticky;
+    top: 0;
+    z-index: 1020; /* por encima del resto */
+  }
+  
+  /* Hace que el logo, los menús y el icono queden alineados verticalmente */
+nav .container {
+  align-items: center;
+}
+
+/* Sombra y bordes suaves ya están en la clase .shadow/.rounded-4 */

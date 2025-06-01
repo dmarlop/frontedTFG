@@ -1,0 +1,51 @@
+.carrito-flotante {
+  position: fixed;
+  top: 12vh;
+  right: 30px;
+  width: 350px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.carrito-header,
+.carrito-footer {
+  background: #f8f9fa;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-close-white {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.producto-item {
+  font-size: 14px;
+}
+
+.cantidad-input {
+  width: 65px;
+  text-align: center;
+}
+
+.botones-container {
+  display: flex;
+  gap: 5px;
+  margin-left: 8px;
+}
+
+/* ✅ Mensaje de error ahora está dentro del flujo y separado */
+.mensaje-error-login {
+  margin-top: 12px;
+  width: 350px;
+  background: #f8f9fa;
+  color: #155724;
+  border: 2px solid #28a745;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  z-index: 1;
+  border-radius: 8px;
+}

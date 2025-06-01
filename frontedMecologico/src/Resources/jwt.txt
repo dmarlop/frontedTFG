@@ -1,0 +1,54 @@
+{
+  "aud": "00000003-0000-0000-c000-000000000000",
+  "iss": "https://sts.windows.net/16811ddd-85a5-41f8-9de7-dd9e0a60cb14/",
+  "iat": 1744802438,
+  "nbf": 1744802438,
+  "exp": 1744808073,
+  "acct": 1,
+  "acr": "1",
+  "acrs": [
+    "p1"
+  ],
+  "aio": "AZQAa/8ZAAAAzXyzxc1ZkutgQVQQVuH52sNTs/duHP5+6m53GtOXT6OlWAcMjLtzK2PAKYaW+X40B/8E8E5Q9AqB5d1f772Q84D/rjLwOczP85/BB7oh2CFOZnwe31fFf5Ey0KoQUjims1Rw85kHLTPnwij5miaQd7bTSwKHbbwT08lL1n6o4/qZfwoBR1nfS/m6fkzFTYeH",
+  "altsecid": "1:live.com:00037FFE1586C176",
+  "amr": [
+    "pwd",
+    "mfa"
+  ],
+  "app_displayname": "MecologicoPrueba",
+  "appid": "52dd1ecc-a19c-4c4c-b030-9baf74cddef7",
+  "appidacr": "0",
+  "email": "davidmarinlpz@gmail.com",
+  "family_name": "Marín López",
+  "given_name": "David",
+  "idp": "live.com",
+  "idtyp": "user",
+  "ipaddr": "80.31.170.59",
+  "name": "David Marin",
+  "oid": "8d94a08e-4af2-4c9a-96c0-068cf497807e",
+  "platf": "3",
+  "puid": "1003200438906C34",
+  "rh": "1.AUsA3R2BFqWF-EGd592eCmDLFAMAAAAAAAAAwAAAAAAAAABGAUhLAA.",
+  "scp": "openid profile User.Read email",
+  "sid": "003f81e9-dc47-c0df-0cf4-b3d5f2453749",
+  "signin_state": [
+    "kmsi"
+  ],
+  "sub": "vDeIxAJmEGxcR90-tJ9WWYBdNAcS-oZh9JnWJKv8FhE",
+  "tenant_region_scope": "EU",
+  "tid": "16811ddd-85a5-41f8-9de7-dd9e0a60cb14",
+  "unique_name": "live.com#davidmarinlpz@gmail.com",
+  "uti": "ODUJ5M6Lkkm6ANqox69bAA",
+  "ver": "1.0",
+  "wids": [
+    "194ae4cb-b126-40b2-bd5b-6091b380977d",
+    "13bd1c72-6f4a-4dcf-985f-18d3b80f208a"
+  ],
+  "xms_ftd": "le3Q60tPFIOQfIzMOhbSjZF2yfMPiwESscvN0rI7PAI",
+  "xms_idrel": "30 5",
+  "xms_st": {
+    "sub": "OHyKzM9aZhYe8VMCa0RcJA3pbyogj2vjqbKJHSN-D94"
+  },
+  "xms_tcdt": 1734539295,
+  "xms_tdbr": "EU"
+}

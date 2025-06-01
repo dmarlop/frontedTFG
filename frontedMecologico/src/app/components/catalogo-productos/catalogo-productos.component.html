@@ -1,0 +1,114 @@
+<h3 class="my-4 text-success text-center">
+  Productos del catálogo {{ catalogoNombre }}
+</h3>
+
+<div *ngIf="loading" class="text-center my-5">
+  <div class="spinner-border text-success"></div>
+</div>
+
+<div *ngIf="!loading" class="mx-auto" style="max-width: 960px;">
+  <div class="row">
+    
+    <!-- Filtros -->
+    <div class="col-3">
+      <h5 class="text-success">Filtrar por categoría</h5>
+      <div *ngFor="let c of categories" class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" [id]="'cat-'+c"
+               (change)="toggleCategory(c)" [checked]="selectedCategories.includes(c)" />
+        <label class="form-check-label" [for]="'cat-'+c">{{ c }}</label>
+      </div>
+
+      <h5 class="text-success mt-4">Filtrar por subcategoría</h5>
+      <div *ngFor="let s of availableSubcategories" class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" [id]="'sub-'+s"
+               (change)="toggleSubcategory(s)" [checked]="selectedSubcategories.includes(s)" />
+        <label class="form-check-label" [for]="'sub-'+s">{{ s }}</label>
+      </div>
+
+      <h5 class="text-success mt-4">Filtrar por características</h5>
+      <div *ngFor="let f of features" class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" [id]="f"
+               (change)="toggleFeature(f)" [checked]="selectedFeatures.includes(f)" />
+        <label class="form-check-label" [for]="f">{{ f }}</label>
+      </div>
+    </div>
+
+    <!-- Productos -->
+    <div class="col-9">
+      <div class="list-group">
+        <div class="list-group-item" *ngFor="let p of productosPaginados">
+          <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+              <div class="d-flex align-items-center">
+                <h6 class="mb-1">{{ p.nombreComercial }}</h6>
+                <span *ngIf="productosEnCarrito.has(p.id)"
+                      class="text-success ms-2" title="En el carrito">✅</span>
+              </div>
+              <small class="text-muted">
+                {{ p.pvp | currency:'EUR':'symbol':'1.2-2' }} / {{ p.unidadDeVenta }}
+              </small>
+            </div>
+
+            <div class="d-flex flex-column align-items-end">
+              <div *ngIf="erroresCantidad[p.id]" class="text-success small mb-1">
+                Introduce un valor válido
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <input type="text"
+                       class="form-control form-control-sm" style="width: 4rem"
+                       [(ngModel)]="cantidades[p.id]" />
+                <button class="btn btn-success btn-sm"
+                        (click)="validarYAgregar(p)">
+                  Añadir
+                </button>
+                <button *ngIf="!detalleAbierto[p.id]"
+                        class="btn btn-outline-secondary btn-sm"
+                        (click)="toggleDetalles(p.id)">Detalles ▼</button>
+                <button *ngIf="detalleAbierto[p.id]"
+                        class="btn btn-link btn-sm"
+                        (click)="toggleDetalles(p.id)">Ocultar ▲</button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="detalleAbierto[p.id]" class="mt-3 small">
+            <div><b>Categoría:</b> {{ p.categoriaNombre || '—' }}</div>
+            <div><b>Subcategoría:</b> {{ p.subcategoriaNombre || '—' }}</div>
+            <div *ngIf="p.caracteristicas?.length">
+              <b>Características:</b> {{ p.caracteristicas?.join(', ') }}
+            </div>
+            <div *ngIf="p.ingredientesLista?.length">
+              <b>Ingredientes:</b> {{ p.ingredientesLista?.join(', ') }}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!filteredProducts.length"
+             class="text-center text-muted py-4">
+          No hay productos que coincidan con los filtros.
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <nav *ngIf="totalPaginas > 1" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="paginaActual === 1">
+            <button class="page-link text-success" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          </li>
+
+          <li class="page-item" *ngFor="let page of [].constructor(totalPaginas); let i = index">
+            <button class="page-link text-success"
+                    [ngStyle]="{'font-weight': paginaActual === i + 1 ? 'bold' : 'normal'}"
+                    (click)="cambiarPagina(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+
+          <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+            <button class="page-link text-success" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

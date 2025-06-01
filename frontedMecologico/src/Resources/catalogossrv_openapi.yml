@@ -1,0 +1,1087 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Catalogo Mecologico API
+  description: |
+    # API que gestiona los Catalogos, e información asociada a los mismo, en Mecologico
+  contact:
+    name: API Support
+    url: https://domain/issues
+    email: mail@mail.com
+tags:
+  - name:  Catalogos
+    description: API de Catalogos
+  - name:  Productos
+    description: API de Productos Catalogos
+    
+paths:
+  /api/v1/catalogos:
+    get:
+      tags:
+        - Catalogos
+      summary: Obtiene los Catalogos de Mecologico
+      description: Obtiene los catalogos de Mecologico
+      operationId: productosMecologicoGetAll
+      parameters:
+        - $ref: '#/components/parameters/catalogoStatus' 
+      responses:
+        '200':
+          description: Catalogo Mecologico information.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Catalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout 
+    post:
+      tags:
+        - Catalogos
+      summary: Crea un nuevo Catalogo en Mecologico.
+      description: Create Mecologico Catalogo 
+      operationId: catalogoMecologicoCreate
+      requestBody:
+        description: Información del Catalogo a crear. 
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogoEdit"
+      responses:
+        '200':
+          description: Información del Producto Creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Catalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout              
+          
+  /api/v1/catalogos/{catalogoId}:
+    get:
+      tags:
+        - Catalogos
+      summary: Obtiene un catalogo por su identificador
+      description: Obtiene un catalogo por su identificador
+      operationId: catalogoMecologicoById
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'           
+      responses:
+        '200':
+          description: Producto By ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogoDetalle"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    put:
+      tags:
+        - Catalogos
+      summary: Actualiza un Catalogo de Mecologico.
+      description: Update Mecologico Catalogo
+      operationId: CatalogoMecologicoUpdate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'          
+      requestBody:
+        description: Información de Producto a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogoEdit'        
+      responses:
+        '200':
+          description: Información del Catalogo Actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Catalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout   
+    delete:
+      tags:
+        - Catalogos
+      summary: Elimina un Catalogo de Mecologico.
+      description: Delete Mecologico ProCatalogoducto
+      operationId: catalogoMecologicoDelete
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'    
+      responses:
+        '204':
+          description: El Catalogo ha sido eliminado
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout          
+          
+  /api/v1/catalogos/{catalogoId}/productos:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene los productos de un catálogo
+      description: Obtiene los productos de un catálogo
+      operationId: productoCatalogoGetAll
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'           
+      responses:
+        '200':
+          description: Obtiene los productos de un catálogo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: "#/components/schemas/ProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    post:
+      tags:
+        - Productos
+      summary: Crea un producto de Catalogo  Mecologico.
+      description: Create producto de Catalogo
+      operationId: productoCatalogoCreate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'           
+      requestBody:
+        description: Información de un Producto de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información de los ingredientes del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                               
+  
+  /api/v1/catalogos/{catalogoId}/productos/{productoId}:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene los productos de un catálogo
+      description: Obtiene los productos de un catálogo
+      operationId: productoCatalogoGetById
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/productoId'           
+      responses:
+        '200':
+          description: Obtiene un productos de un catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+    put:
+      tags:
+        - Productos
+      summary: Actualiza un producto de Catalogo  Mecologico.
+      description: Actualiza producto de Catalogo
+      operationId: productoCatalogoUpadate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/productoId'           
+      requestBody:
+        description: Información de un Producto de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información de los ingredientes del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout        
+  
+  /api/v1/catalogos/{catalogoId}/pedidos:
+    get:
+      tags:
+        - Pedidos
+      summary: Obtiene los pedidos de un catálogo. En el caso de Usuario que sea cliente, sólo los que le correspondan
+      description: Obtiene los pedidos de un catálogo
+      operationId: pedidoCatalogoGetAll
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'           
+      responses:
+        '200':
+          description: Obtiene los pedidos de un catálogo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: "#/components/schemas/PedidoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout     
+    post:
+      tags:
+        - Pedidos
+      summary: Crea un Pedido de Catalogo  Mecologico. El pedido se asigna al cliente del JWT
+      description: Create pedido de Catalogo
+      operationId: pedidoCatalogoCreate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'           
+      requestBody:
+        description: Información de un Pedido de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información de los ingredientes del producto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PedidoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+  /api/v1/catalogos/{catalogoId}/pedidos/{pedidoId}:
+    get:
+      tags:
+        - Pedidos
+      summary: Obtiene los productos de un catálogo
+      description: Obtiene los pedidos de un identificador. En el caso de un usuario cliente, debe de coincidir su persona con el cliente que realizó el pedido
+      operationId: pedidoCatalogoGetById
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      responses:
+        '200':
+          description: Obtiene un pedido de catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PedidoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+    put:
+      tags:
+        - Pedidos
+      summary: Actualiza un pedido de Catalogo  Mecologico.
+      description: Actualiza Pedido de Catalogo. En el caso de un usuario cliente, debe
+      operationId: pedidoCatalogoUpadate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      requestBody:
+        description: Información de un Pedido de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información del pedido del catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PedidoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                  
+ 
+  /api/v1/catalogos/{catalogoId}/pedidos/{pedidoId}/productos:
+    get:
+      tags:
+        - Pedidos Productos
+      summary: Obtiene los productos de un pedidos
+      description: Obtiene los productos de un pedidos
+      operationId: productoPedidoCatalogoGetAll
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      responses:
+        '200':
+          description: Obtiene los productos de un pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: "#/components/schemas/PedidoProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+    post:
+      tags:
+        - Pedidos Productos
+      summary: Crea una petición de Producto en el Pedido
+      description: Crea una petición de Producto en el Pedido.
+      operationId: productoPedidoCatalogoCreate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      requestBody:
+        description: Información del producto de un Pedido de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoProductoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información del producto del pedido del catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PedidoProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                  
+  /api/v1/catalogos/{catalogoId}/pedidos/{pedidoId}/productos/{productoId}:
+    get:
+      tags:
+        - Pedidos Productos
+      summary: Obtiene información de un productos de un pedidos
+      description: Obtiene información de un productos de un pedidos
+      operationId: productoPedidoCatalogoGetById
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'
+        - $ref: '#/components/parameters/productoId'           
+      responses:
+        '200':
+          description: Obtiene el productos de un pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: "#/components/schemas/PedidoProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+    put:
+      tags:
+        - Pedidos Productos
+      summary: Actualiza una petición de Producto en el Pedido
+      description: Actualiza una petición de Producto en el Pedido.
+      operationId: productoPedidoCatalogoUpdate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'      
+        - $ref: '#/components/parameters/productoId'           
+      requestBody:
+        description: Información del producto de un Pedido de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoProductoCatalogoEdit'        
+      responses:
+        '200':
+          description: Información del producto del pedido del catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PedidoProductoCatalogo"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                  
+    delete:
+      tags:
+        - Pedidos Productos
+      summary: Borra información de un productos de un pedidos
+      description: Obtiene información de un productos de un pedidos
+      operationId: productoPedidoCatalogoDelete
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'
+        - $ref: '#/components/parameters/productoId'           
+      responses:
+        '204':
+          description: El Borrado ha sido correcto
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout              
+  
+  /api/v1/catalogos/{catalogoId}/pedidos/{pedidoId}/pago:
+    get:
+      tags:
+        - Pedidos Pagos
+      summary: Obtiene el pago de un pedido de catálogo
+      description: Obtiene el pago de un pedido de catálogo
+      operationId: pagoPedidoCatalogoGet
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      responses:
+        '200':
+          description: Obtiene un pago de  pedido de catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pago"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout       
+    put:
+      tags:
+        - Pedidos Pagos
+      summary: Actualiza un pago de  pedido de Catalogo  Mecologico.
+      description: Actualiza un pago de  pedido de Catalogo  Mecologico. La creación debe de ser automática cuando el usuario Cierra un Pedido.
+      operationId: pagoPedidoCatalogoCreateUpdate
+      parameters:
+        - $ref: '#/components/parameters/catalogoId'
+        - $ref: '#/components/parameters/pedidoId'           
+      requestBody:
+        description: Información del pago de un Pedido de Catálogo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PagoEdit'        
+      responses:
+        '200':
+          description: Información del pago del pedido del catálogo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pago"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:              
+                $ref: "#/components/schemas/ErrorResponse"
+        '503':
+          description: Unavailable
+        '504':
+          description: Gateway Timeout                  
+    
+ 
+components:
+  parameters:
+    catalogoId:
+      name: catalogoId
+      in: path
+      required: true
+      description: identificador del Catalogo
+      schema:
+        type: string
+      example: vacaciones
+    catalogoStatus:
+      name: estado
+      in: query
+      required: false
+      schema:
+        $ref: "#/components/schemas/CatalogoStatus" 
+    productoId:
+      name: productoId
+      in: path
+      required: true
+      description: identificador del Producto 
+      schema:
+        type: string
+      example: vacaciones
+    pedidoId:
+      name: pedidoId
+      in: path
+      required: true
+      description: identificador de pedido de catalogo
+      schema:
+        type: string
+      example: vacaciones      
+    pagoId:
+      name: pagoId
+      in: path
+      required: true
+      description: identificador de pago de  pedido de catalogo
+      schema:
+        type: string
+      example: vacaciones      
+      
+  schemas:
+    Catalogo:
+      type: object
+      description: Instancia de Catalogo
+      allOf:
+        - $ref: "#/components/schemas/CatalogoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Catalogo
+            startTime:
+              type: string
+              description: Fecha de creación del Producto
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del Producto
+              format: date-time
+    CatalogoDetalle:
+      type: object
+      description: Instancia de Catalogo Detallada
+      allOf:
+        - $ref: "#/components/schemas/Catalogo"     
+        - properties:
+            productos:
+              type: array
+              description: listado de productos del catalogo asociadas
+              items:
+                $ref: "#/components/schemas/ProductoCatalogo"
+    CatalogoEdit:
+      type: object
+      description: Catalogo de Mecológico
+      properties:
+        nombre:
+          type: string
+          description: nombre del Catalogo
+        status:
+          $ref: "#/components/schemas/CatalogoStatus" 
+        fecha:
+              type: string
+              description: Fecha del catálogo. Se tomará el valor de fecha y hora actual si al crear el catalogo no va este dato.
+              format: date-time
+      required:
+        - nombre
+    CatalogoStatus:
+      type: string
+      default: "Previo"
+      description: estado del catalogo. Se tomará el valor de Previo si al crear el catalogo no va este dato.
+      enum:
+        - "Previo"
+        - "Activo"
+        - "Cerrado"
+
+    ProductoCatalogo:
+      type: object
+      description: Instancia de Producto de Catalogo
+      allOf:
+        - $ref: "#/components/schemas/ProductoCatalogoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Producto Catalogo
+            ingredientes:
+              description: indica si existe una lista de ingredientes disponible
+              type: boolean
+            fotografias:
+              description: indica si existe una lista de fotografias disponible
+              type: boolean
+            codigoBarras:
+              type: string
+              description: codigo de barras del producto
+            caracteristicas:
+              $ref: '#/components/schemas/CaracteristicasProducto'  
+            categoria:
+              $ref: '#/components/schemas/Categoria'  
+            subcategoria:
+              $ref: '#/components/schemas/SubCategoria'  
+            startTime:
+              type: string
+              description: Fecha de creación del Producto
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del Producto
+              format: date-time
+            imagenes:
+              type: array
+              description: listado de identificadores de imágenes
+              items:
+                type: string
+    ProductoCatalogoEdit:
+      type: object
+      description: Catalogo Producto de Mecológico
+      properties:
+        productoId:
+          type: string
+          description: identificador del Producto
+        nombreComercial:
+          type: string
+          description: nombre con el que se vende el producto
+        coste:
+          type: number
+          format: double
+          description: coste del producto
+        pvp:
+          type: number
+          format: double
+
+          description: pvp del producto          
+        iva:
+          type: number
+          format: double
+          description: porcentaje de IVA que se aplica al producto
+      required:
+        - coste
+        - pvp
+        - iva
+    CaracteristicasProducto:
+      type: array
+      description: Característica de Producto de Catalogo de Mecológico
+      items:
+        type: string
+        enum:
+          - "Ecológico"
+          - "ComercioJusto"
+          - "Vegano"
+          - "Vegetariano"
+          - "SinGluten"
+          - "SinGlutenTrazas"
+          - "SinLactosa"
+    Categoria:
+      type: object
+      description: Instancia de Categoria Producto
+      allOf:
+        - $ref: "#/components/schemas/CategoriaEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador de la Categoria Producto
+    CategoriaEdit:
+      type: object
+      description: Categoria de Producto de Mecológico
+      properties:
+        codCategoria:
+          type: string
+          description: Código de Categoría del Producto
+        nombre:
+          type: string
+          description: nombre de la Categoria Producto
+        orden:
+          type: integer
+          description: permite la ordenación de categorías dentro del global
+    SubCategoria:
+      type: object
+      description: Instancia de Categoria Producto
+      allOf:
+        - $ref: "#/components/schemas/SubCategoriaEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador de la Subcategoria Producto
+            startTime:
+              type: string
+              description: Fecha de creación del Producto
+              format: date-time
+            modifyTime:
+              type: string
+              description: ÚLtima modificación del Producto
+              format: date-time
+    SubCategoriaEdit:
+      type: object
+      description: SubCategoria de Producto de Mecológico
+      properties:
+        codCategoria:
+          type: string
+          description: Código de SubCategoría del Producto
+        nombre:
+          type: string
+          description: nombre de la SubCategoria Producto
+        orden:
+          type: integer
+          description: permite la ordenación de subcategorías dentro del global
+
+    PedidoCatalogo:
+      type: object
+      description: Instancia de Pedido de Catalogo
+      allOf:
+        - $ref: "#/components/schemas/PedidoCatalogoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Pedido Catalogo
+            totalPedidoBase:
+              type: number
+              format: double
+            totalPedido:
+              $ref: "#/components/schemas/Total"
+              description: campos calculados en función de los productos pedidos
+            totalEntrega:
+              $ref: "#/components/schemas/Total"
+              description: campos calculados en función de los productos que se pueden servir
+    Total:
+      type: object
+      description: Incluye información del desglose en Total, Base e IVA
+      properties:
+        total:
+          type: number
+          format: double
+        base:
+          type: number
+          format: double
+        iva:
+          type: number
+          format: double
+    PedidoCatalogoEdit:
+      type: object
+      description: Pedido que desde un catálogo realiza un usuario
+      properties:
+        codUsuario:
+          type: string
+          description: Código de Usuario que realiza el pedido
+        fecha:
+          type: string
+          format: date-time
+          description: fecha del pedido. En caso de que al crear no venga este atributo se tomará la fecha y hora actual.
+        estado:
+          type: string
+          description: " Determina el estado actual de la compra:
+           - Abierto: se ha creado el pedido
+           - Cerrado: el usuario cierra el pedido
+           - Montando: el pedido se está montando en almacen. No se puede hacer modificaciones ya
+           - Enviado: el pedido se ha enviado según transporte
+           - Recepcionado: el pedido ha sido recepcionado por el cliente segun transporte
+           - Pagado: el pedido ha sido pagado
+           - Cancelado: el pedido ha sido cancelado"
+          enum:
+            - "Abierto"
+            - "Cerrado"
+            - "Montando"
+            - "Enviado"
+            - "Recepcionado"
+            - "Pagado"
+            - "Cancelado"
+    PedidoProductoCatalogo:
+      type: object
+      description: Instancia de Pedido de Catalogo
+      allOf:
+        - $ref: "#/components/schemas/PedidoProductoCatalogoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Pedido Producto Catalogo
+              
+    PedidoProductoCatalogoEdit:
+      type: object
+      description: Producto que desde un pedido de catálogo realiza un usuario
+      properties:
+        codUsuario:
+          type: string
+          description: Código de Usuario que realiza el pedido de Producto
+        codProductoCatalogo:
+          type: string
+          description: producto del catalogo que se ha pedido
+        cantidadPedida:
+          type: number
+          format: double
+        cantidadEntregada:
+          type: number
+          format: double
+    Pago:
+      type: object
+      description: Instancia de Pago del Pedido
+      allOf:
+        - $ref: "#/components/schemas/PagoEdit"     
+        - properties:
+            id:
+              type: string
+              description: Identificador del Pago del Pedido
+            cantidadAdeudada:
+              type: number
+              format: double
+              description: "cantidad que debe de satisfacer el usuario. Viene determinada por el sumatorio de cada canditadaEntregada X PVP de cada Producto del Pedido "
+    PagoEdit:
+      type: object
+      description: Describe el pago de un pedido
+      properties:
+        codPago:
+          type: string
+          description: Código de Pago Externo
+        cantidadEntregada:
+          type: number
+          format: double
+          description: "cantidad que ha satisfecho el usuario"
+        estado:
+          type: string
+          description: "Estado en el que se encuentra el Pago del Usuario"
+          enum:
+            - "Abierto"
+            - "Cancelado"
+            - "Cerrado"
+        formaPago:
+          type: string
+          description: "Forma en la que el cliente ha satisfecho el pago"
+          enum:
+            - "Metalico"
+            - "Transferencia"
+            - "Tarjeta"
+            - "Bizum"
+            
+      
+    ErrorResponse:
+      description: Provides error information
+      type: object
+      properties:
+        code:
+          type: integer
+          description: |
+            The code allows your client application to identify the error in an automated fashion.
+        message:
+          type: string
+          description: A detailed message of the error.
+        description:
+          type: string
+          description: A description message of the error.
